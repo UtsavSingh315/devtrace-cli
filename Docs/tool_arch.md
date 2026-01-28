@@ -1,0 +1,3 @@
+- Configured uv - project mgmt library
+- included requred deps
+- checked for build
