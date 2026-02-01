@@ -1,0 +1,38 @@
+[commit]
+
+# Structural regex only (no hardcoded types)
+# Matches: DT-8 | DOCS : Reference CLI information
+pattern = "^[A-Z]+-\\d+\\s\\|\\s[A-Z]+\\s:\\s.+$"
+
+# Fail command on invalid commit
+strict = true
+
+
+[ticket]
+
+# Ticket ID format: ABC-123
+pattern = "^[A-Z]+-\\d+$"
+
+# Enforce uppercase ticket IDs
+uppercase = true
+
+
+[types]
+
+# Allowed commit types (semantic validation, not regex)
+allowed = [
+  "FEAT",
+  "FIX",
+  "DOCS",
+  "REFACTOR",
+  "TEST",
+  "CHORE"
+]
+
+
+[severity]
+
+# Violation handling
+invalid_format = "error"
+unknown_type = "error"
+missing_ticket = "error"
