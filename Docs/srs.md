@@ -38,9 +38,9 @@ DevTrace provides seamless, real-time integration between Jira and Git, automati
 
 ### 1.2 Document Conventions
 - **Bold text** indicates key terms and system components  
-- `Monospace font` represents commands, APIs, and code references  
-- Numbered sections indicate hierarchical organization  
-- Diagrams and tables are labeled and cross-referenced  
+- **Monospace font** represents commands, APIs, and code references  
+- **Numbered sections** indicate hierarchical organization  
+-**Diagrams and tables** are labeled and cross-referenced  
 
 ---
 
