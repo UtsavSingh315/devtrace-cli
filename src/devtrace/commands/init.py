@@ -1,4 +1,3 @@
-# src/devtrace/commands/init.py
 import typer
 import toml
 import subprocess
@@ -13,10 +12,14 @@ console = Console()
 
 @app.callback()
 def main_callback(
+    ctx: typer.Context,
     # project_dir: str = typer.Argument(".devtrace", help="Path to initialize (default: current dir)"),
     force: bool = typer.Option(False, "--force", "-f", help="Overwrite existing files/folders")
 ):
     """Main initialization: Create project structure with folders and configs"""
+    if ctx.invoked_subcommand is not None:
+        return
+    
     base_path = Path(".devtrace").resolve()
     
     if base_path.exists() and not force:
@@ -111,6 +114,24 @@ fi
 
 
 # subcommands
+@app.command()
+def hooks():
+    """Use to apply devtrace hooks as default git hooks"""
+    base_path = Path(".devtrace").resolve()
+    hooks_dir_rel = ".devtrace/hooks"
+    try:
+        # Check if it's a git repo
+        subprocess.run(["git", "rev-parse", "--is-inside-work-tree"], cwd=base_path.parent, check=True, capture_output=True)
+        
+        # Set the config (local to this repo)
+        subprocess.run(["git", "config", "core.hooksPath", hooks_dir_rel], cwd=base_path.parent, check=True)
+        console.print(f"[bold green]Set git core.hooksPath to {hooks_dir_rel}[/]")
+        console.print("[dim]All hooks in .devtrace/hooks are now active![/]")
+    except subprocess.CalledProcessError:
+        console.print("[yellow]Not a git repo (run 'git init' first). Hooks generated but not activated.[/]")
+    except FileNotFoundError:
+        console.print("[red]Git not found in PATH. Manually set 'git config core.hooksPath .devtrace/hooks' after init.[/]")
+
 @app.command()
 def jira(
     config_path: str = typer.Option("configs/jira.toml", help="Path to Jira config file")

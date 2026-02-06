@@ -8,7 +8,7 @@ app = typer.Typer(name="devtrace", add_completion=False)
 console = Console()
 
 
-app.command()(hello.hello)   
+app.command()(hello.hello)
 app.command()(version.version)
 app.add_typer(init_app, name="init")
 app.add_typer(validate_app, name="validate")
