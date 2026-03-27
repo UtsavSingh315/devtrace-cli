@@ -1,4 +1,8 @@
 #!/bin/sh
-# Smart formatter (never blocks)
+# DevTrace Prepare-Commit-Msg Hook
+# 1. Prepends active ticket ID to commit message
+# 2. Runs smart formatter
+
+devtrace hook prepare-commit-msg "$1" "$2"
 devtrace format "$1"
 exit 0

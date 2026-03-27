@@ -1,0 +1,7 @@
+#!/bin/sh
+# DevTrace Post-Commit Hook
+# Automatically posts commit details to the active Jira ticket
+# This hook runs after a successful commit
+
+devtrace hook post-commit
+exit 0

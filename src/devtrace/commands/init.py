@@ -127,7 +127,44 @@ def hooks():
 
 @app.command()
 def jira(config_path: str = typer.Option("configs/jira.toml", help="Path to Jira config")):
-    console.print(f"[yellow]Jira setup at {config_path}[/]")
+    """
+    Interactive setup for Jira API credentials.
+    
+    Prompts for:
+    - Jira Host (e.g., https://your-org.atlassian.net)
+    - Email address
+    - API Token (generated from Atlassian Account Settings)
+    """
+    console.print("[bold cyan]🔐 Jira Configuration Setup[/bold cyan]")
+    console.print("[dim]Generate your API token at: https://id.atlassian.com/manage-profile/security/api-tokens[/dim]\n")
+    
+    host = typer.prompt("Jira Host (e.g., https://your-org.atlassian.net)")
+    email = typer.prompt("Email address")
+    api_token = typer.prompt("API Token", hide_input=True)
+    
+    # Get or create config path
+    local_config_path = Path.home() / ".devtrace" / "configs" / "local" / "local_config.toml"
+    local_config_path.parent.mkdir(parents=True, exist_ok=True)
+    
+    # Load existing config or create new
+    if local_config_path.exists():
+        config_data = toml.load(local_config_path)
+    else:
+        config_data = {}
+    
+    # Add Jira credentials
+    config_data["jira"] = {
+        "host": host,
+        "email": email,
+        "api_token": api_token,
+    }
+    
+    # Save config
+    with open(local_config_path, "w") as f:
+        toml.dump(config_data, f)
+    
+    console.print(f"[green]✓ Jira credentials saved to {local_config_path}[/green]")
+    console.print("[dim]These credentials are stored locally and not committed to git.[/dim]")
 
 
 @app.command()
