@@ -7,11 +7,9 @@ from rich.console import Console
 from devtrace.utils.config import Config, ConfigError
 from devtrace.utils.jira_client import JiraClient, JiraError
 
-app = typer.Typer(name="comment")
 console = Console()
 
 
-@app.command()
 def post_comment(
     message: str = typer.Argument(..., help="Comment message"),
     ticket_id: str = typer.Option(
@@ -21,6 +19,19 @@ def post_comment(
         help="Target ticket ID (uses active context if not specified)"
     ),
 ):
+    """
+    Post a comment to a Jira ticket.
+
+    If no ticket ID is provided, uses the currently active ticket from context.
+
+    Examples:
+        devtrace comment "Great progress on this task!"
+        devtrace comment "Fixed the bug" --ticket DT-25
+        devtrace comment "Updated tests" -t PROJ-456
+    """
+    if not message:
+        console.print("❌ Error: message argument is required", style="red")
+        raise typer.Exit(code=1)
     """
     Post a comment to a Jira ticket.
 

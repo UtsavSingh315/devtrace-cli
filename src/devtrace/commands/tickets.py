@@ -9,11 +9,9 @@ from datetime import datetime
 from devtrace.utils.config import Config, ConfigError
 from devtrace.utils.jira_client import JiraClient, JiraError
 
-app = typer.Typer(name="tickets")
 console = Console()
 
 
-@app.command(name="list")
 def list_tickets(
     status: str = typer.Option(
         "Open",
@@ -95,15 +93,6 @@ def list_tickets(
         console.print(f"❌ Unexpected Error: {e}", style="red")
         raise typer.Exit(code=1)
 
-
-@app.callback(invoke_without_command=True)
-def tickets_command(ctx: typer.Context):
-    """
-    Main tickets command - alias for 'devtrace tickets list'.
-    """
-    if ctx.invoked_subcommand is None:
-        # Default to list if no subcommand provided
-        ctx.invoke(list_tickets)
 
 
 def _format_date(date_str: str) -> str:

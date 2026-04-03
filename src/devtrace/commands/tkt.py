@@ -11,11 +11,9 @@ from datetime import datetime
 from devtrace.utils.config import Config, ConfigError
 from devtrace.utils.jira_client import JiraClient, JiraError
 
-app = typer.Typer(name="tkt")
 console = Console()
 
 
-@app.command()
 def ticket_details(
     ticket_id: str = typer.Argument(..., help="Ticket ID (e.g., PROJ-123)"),
     show_comments: bool = typer.Option(
