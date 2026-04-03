@@ -10,6 +10,7 @@ from typing import Optional, List, Tuple
 from devtrace.utils.config import Config, ConfigError
 from devtrace.utils.jira_client import JiraClient, JiraError
 import subprocess
+import re
 
 app = typer.Typer(name="hook")
 console = Console()
@@ -113,15 +114,23 @@ def post_commit_hook(
     """
     try:
         config = Config()
-        active_context = config.get_active_context()
-        ticket_id = active_context.get("ticket_id")
-
-        if not ticket_id:
-            console.print("[yellow]⚠️  No active ticket in context. Skipping auto-comment.[/yellow]")
-            raise typer.Exit(code=0)
-
+        
         # Get commit info
         commit_info = get_current_commit_info()
+        
+        # Extract ticket ID from commit message (format: TICKET-ID | TYPE : message)
+        ticket_match = re.match(r'^([A-Z]+-\d+)', commit_info["message"])
+        
+        if not ticket_match:
+            # Fallback to active context
+            active_context = config.get_active_context()
+            ticket_id = active_context.get("ticket_id")
+            
+            if not ticket_id:
+                console.print("[yellow]⚠️  No ticket ID in commit message or active context. Skipping auto-comment.[/yellow]")
+                raise typer.Exit(code=0)
+        else:
+            ticket_id = ticket_match.group(1)
 
         # Skip if WIP
         if skip_if_wip and "[WIP]" in commit_info["message"]:
