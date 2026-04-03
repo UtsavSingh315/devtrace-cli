@@ -1,12 +1,35 @@
 # -*- mode: python ; coding: utf-8 -*-
+"""
+PyInstaller spec file for DevTrace CLI
+Properly bundles all dependencies including rich unicode data
+"""
+from PyInstaller.utils.hooks import collect_data_files, collect_submodules
 
+# Collect data files from rich and other packages
+rich_datas = collect_data_files('rich')
+typer_datas = collect_data_files('typer')
+rich_modules = collect_submodules('rich')
 
 a = Analysis(
     ['src\\devtrace\\main.py'],
     pathex=[],
     binaries=[],
-    datas=[],
-    hiddenimports=[],
+    datas=rich_datas + typer_datas,
+    hiddenimports=[
+        'rich._unicode_data',
+        'rich._unicode_data.unicode17_0_0',
+        'rich.console', 
+        'rich.table',
+        'rich.panel',
+        'rich.markdown',
+        'charset_normalizer',
+        'certifi',
+        'requests',
+        'jira',
+        'git',
+        'toml',
+        'click',
+    ] + rich_modules,
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
