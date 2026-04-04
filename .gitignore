@@ -37,3 +37,7 @@ wheels/
 
 # DevTrace - per-developer local config
 .devtrace/configs/local/
+
+# DevTrace Dashboard - Phase 3 (separate project, ignored from main repo)
+devtrace-dashboard/
+
